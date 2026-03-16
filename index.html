@@ -1,0 +1,3593 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I Creation 策藝 — 讓藝術，成為你最有力的品牌語言</title>
+<meta name="description" content="I Creation 策藝協助企業與藝術家共同創造文化影響力。企業藝術策略顧問、藝術家職涯加速、出版顧問、AI 藝術內容製作。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Serif+TC:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ========================================
+   CSS VARIABLES & RESET
+======================================== */
+:root {
+  --navy: #070d1a;
+  --navy-mid: #0d1829;
+  --navy-light: #132038;
+  --blue: #1a4f8a;
+  --blue-mid: #2060a8;
+  --blue-bright: #3580d0;
+  --silver: #8da4be;
+  --silver-light: #b8cfe0;
+  --white: #eef3f8;
+  --gold: #c4933a;
+  --gold-light: #e8b86d;
+  --text: #d0dcea;
+  --text-muted: #7a92a8;
+  --glass: rgba(19, 32, 56, 0.7);
+  --glass-border: rgba(48, 100, 170, 0.25);
+  --font-serif: 'Cormorant Garamond', 'Noto Serif TC', serif;
+  --font-tc: 'Noto Serif TC', serif;
+  --font-tech: 'Rajdhani', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-tc);
+  background: var(--navy);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.7;
+}
+
+/* ========================================
+   CANVAS BACKGROUND
+======================================== */
+#particle-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ========================================
+   NAVIGATION
+======================================== */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  padding: 0 2rem;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.4s ease;
+  background: transparent;
+}
+
+nav.scrolled {
+  background: rgba(7, 13, 26, 0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.nav-logo img {
+  height: 42px;
+  width: auto;
+}
+
+.nav-logo-text {
+  font-family: var(--font-tech);
+  font-size: 1.1rem;
+  letter-spacing: 0.15em;
+  color: var(--white);
+  font-weight: 600;
+}
+
+.nav-logo-sub {
+  font-size: 0.7rem;
+  color: var(--silver);
+  letter-spacing: 0.1em;
+  font-family: var(--font-tc);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--font-tc);
+  font-size: 0.85rem;
+  color: var(--silver-light);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  transition: color 0.3s;
+  cursor: pointer;
+}
+
+.nav-links a:hover { color: var(--blue-bright); }
+
+.nav-cta {
+  background: linear-gradient(135deg, var(--blue), var(--blue-bright));
+  color: white !important;
+  padding: 8px 20px;
+  border-radius: 2px;
+  font-weight: 500;
+}
+
+.nav-cta:hover { background: linear-gradient(135deg, var(--blue-bright), var(--blue-mid)) !important; }
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.hamburger span {
+  width: 24px;
+  height: 2px;
+  background: var(--white);
+  transition: all 0.3s;
+}
+
+/* ========================================
+   PAGE SYSTEM
+======================================== */
+.page {
+  display: none;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+.page.active { display: block; }
+
+/* ========================================
+   HERO SECTION
+======================================== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 120px 2rem 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 80vw;
+  height: 80vw;
+  background: radial-gradient(circle, rgba(26, 79, 138, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -20%;
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, rgba(196, 147, 58, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.hero-eyebrow {
+  font-family: var(--font-tech);
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+  color: var(--blue-bright);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.hero-eyebrow::before {
+  content: '';
+  width: 30px;
+  height: 1px;
+  background: var(--blue-bright);
+}
+
+.hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 300;
+  line-height: 1.2;
+  color: var(--white);
+  margin-bottom: 1.5rem;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+
+.hero-subtitle {
+  font-family: var(--font-tc);
+  font-size: 1rem;
+  color: var(--silver);
+  line-height: 1.8;
+  margin-bottom: 2.5rem;
+  max-width: 480px;
+}
+
+.hero-ctas {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--blue), var(--blue-bright));
+  color: white;
+  padding: 14px 32px;
+  border: none;
+  border-radius: 2px;
+  font-family: var(--font-tc);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: inline-block;
+  letter-spacing: 0.05em;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--blue-bright), var(--blue-mid));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.btn-primary:hover::before { opacity: 1; }
+.btn-primary span { position: relative; z-index: 1; }
+
+.btn-outline {
+  background: transparent;
+  color: var(--silver-light);
+  padding: 14px 32px;
+  border: 1px solid var(--glass-border);
+  border-radius: 2px;
+  font-family: var(--font-tc);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: inline-block;
+  letter-spacing: 0.05em;
+}
+
+.btn-outline:hover {
+  border-color: var(--blue-bright);
+  color: var(--blue-bright);
+}
+
+/* Hero Visual */
+.hero-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-logo-wrap {
+  position: relative;
+  width: 320px;
+  height: 340px;
+}
+
+.hero-logo-glow {
+  position: absolute;
+  inset: -40px;
+  background: radial-gradient(circle, rgba(32, 96, 168, 0.25) 0%, transparent 70%);
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+.hero-logo-ring {
+  position: absolute;
+  inset: -20px;
+  border: 1px solid rgba(48, 128, 208, 0.2);
+  border-radius: 50%;
+  animation: spin-slow 20s linear infinite;
+}
+
+.hero-logo-ring::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background: var(--blue-bright);
+  border-radius: 50%;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.hero-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 0 30px rgba(32, 96, 168, 0.4));
+}
+
+/* Floating Data Tags */
+.hero-tag {
+  position: absolute;
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  padding: 8px 14px;
+  font-family: var(--font-tech);
+  font-size: 0.75rem;
+  color: var(--silver-light);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.hero-tag-1 { top: 10%; right: -10%; animation: float1 4s ease-in-out infinite; }
+.hero-tag-2 { bottom: 25%; left: -15%; animation: float2 5s ease-in-out infinite; }
+.hero-tag-3 { bottom: 10%; right: 5%; animation: float1 3.5s ease-in-out infinite 1s; }
+
+@keyframes float1 {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes float2 {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
+}
+
+/* ========================================
+   STATS SECTION
+======================================== */
+.stats {
+  background: var(--glass);
+  border-top: 1px solid var(--glass-border);
+  border-bottom: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px);
+  padding: 3rem 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.stats-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2rem;
+  text-align: center;
+}
+
+.stat-item {
+  padding: 1rem;
+  border-right: 1px solid var(--glass-border);
+}
+
+.stat-item:last-child { border-right: none; }
+
+.stat-number {
+  font-family: var(--font-tech);
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--blue-bright);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+/* ========================================
+   SECTION COMMON
+======================================== */
+.section {
+  padding: 6rem 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-eyebrow {
+  font-family: var(--font-tech);
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: var(--blue-bright);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.section-eyebrow::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--blue-bright);
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 300;
+  color: var(--white);
+  line-height: 1.3;
+  margin-bottom: 1.5rem;
+}
+
+.section-title em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+
+.section-subtitle {
+  font-size: 1rem;
+  color: var(--silver);
+  max-width: 600px;
+  line-height: 1.8;
+  margin-bottom: 3rem;
+}
+
+/* ========================================
+   DUAL PAIN POINTS
+======================================== */
+.pain-points {
+  background: linear-gradient(135deg, var(--navy-mid) 0%, var(--navy) 100%);
+}
+
+.pain-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.pain-card {
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  padding: 3rem;
+  position: relative;
+  transition: background 0.3s;
+}
+
+.pain-card:hover { background: rgba(19, 32, 56, 0.9); }
+
+.pain-card-icon {
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+}
+
+.pain-card h3 {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--white);
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+.pain-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pain-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: var(--silver);
+}
+
+.pain-list li::before {
+  content: '—';
+  color: var(--blue-bright);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.pain-divider {
+  position: absolute;
+  top: 50%;
+  right: -1px;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 60%;
+  background: linear-gradient(to bottom, transparent, var(--blue), transparent);
+}
+
+/* ========================================
+   SERVICES OVERVIEW
+======================================== */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.service-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  padding: 2.5rem;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--blue), var(--blue-bright));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--blue-bright);
+  background: rgba(26, 79, 138, 0.15);
+}
+
+.service-card:hover::before { transform: scaleX(1); }
+
+.service-number {
+  font-family: var(--font-tech);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--blue-bright);
+  margin-bottom: 1rem;
+}
+
+.service-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.service-name {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--white);
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.service-desc {
+  font-size: 0.88rem;
+  color: var(--silver);
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+
+.service-link {
+  font-family: var(--font-tech);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--blue-bright);
+  text-transform: uppercase;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: gap 0.3s;
+}
+
+.service-link:hover { gap: 1rem; }
+
+/* ========================================
+   FEATURED CASE
+======================================== */
+.featured-case {
+  background: var(--navy-mid);
+}
+
+.case-inner {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  padding: 3rem;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 3rem;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.case-inner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(to bottom, var(--gold), var(--blue-bright));
+}
+
+.case-meta { border-right: 1px solid var(--glass-border); padding-right: 3rem; }
+
+.case-industry {
+  font-family: var(--font-tech);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.case-title {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--white);
+  line-height: 1.3;
+  margin-bottom: 1.5rem;
+}
+
+.case-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.case-metric {
+  display: flex;
+  flex-direction: column;
+}
+
+.case-metric-value {
+  font-family: var(--font-tech);
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--blue-bright);
+}
+
+.case-metric-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.case-content h3 {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: var(--silver-light);
+  margin-bottom: 1rem;
+}
+
+.case-content p {
+  font-size: 0.95rem;
+  color: var(--silver);
+  line-height: 1.9;
+  margin-bottom: 1.5rem;
+}
+
+/* ========================================
+   FOUNDER STATEMENT
+======================================== */
+.founder-section { text-align: center; }
+
+.founder-quote {
+  font-family: var(--font-serif);
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  font-style: italic;
+  font-weight: 300;
+  color: var(--white);
+  max-width: 700px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+  position: relative;
+  padding: 0 2rem;
+}
+
+.founder-quote::before {
+  content: '"';
+  position: absolute;
+  left: -10px;
+  top: -20px;
+  font-size: 5rem;
+  color: rgba(32, 96, 168, 0.3);
+  font-family: serif;
+  line-height: 1;
+}
+
+.founder-attribution {
+  font-family: var(--font-tech);
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  color: var(--blue-bright);
+  text-transform: uppercase;
+}
+
+/* ========================================
+   CONTENT PREVIEW
+======================================== */
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.content-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.content-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--blue-bright);
+}
+
+.content-type-bar {
+  height: 3px;
+}
+
+.content-type-article { background: var(--blue-bright); }
+.content-type-podcast { background: var(--gold); }
+.content-type-video { background: #e03c5a; }
+
+.content-card-body { padding: 1.5rem; }
+
+.content-type-label {
+  font-family: var(--font-tech);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.content-card h4 {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  color: var(--white);
+  line-height: 1.4;
+  margin-bottom: 0.75rem;
+}
+
+.content-card p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.content-meta {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--glass-border);
+  font-family: var(--font-tech);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+
+/* ========================================
+   NEWSLETTER
+======================================== */
+.newsletter {
+  background: linear-gradient(135deg, rgba(26, 79, 138, 0.2), rgba(7, 13, 26, 0.8));
+  border-top: 1px solid var(--glass-border);
+  border-bottom: 1px solid var(--glass-border);
+  text-align: center;
+}
+
+.newsletter-form {
+  display: flex;
+  gap: 1rem;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.newsletter-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  color: var(--text);
+  padding: 12px 16px;
+  font-family: var(--font-tc);
+  font-size: 0.9rem;
+  border-radius: 2px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.newsletter-input:focus { border-color: var(--blue-bright); }
+.newsletter-input::placeholder { color: var(--text-muted); }
+
+/* ========================================
+   FOOTER
+======================================== */
+footer {
+  background: var(--navy);
+  border-top: 1px solid var(--glass-border);
+  padding: 4rem 2rem 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.footer-brand { }
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.footer-logo img { height: 36px; }
+
+.footer-tagline {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--silver);
+  line-height: 1.6;
+}
+
+.footer-col h5 {
+  font-family: var(--font-tech);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--blue-bright);
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.footer-links a {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover { color: var(--silver-light); }
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 2rem;
+  border-top: 1px solid var(--glass-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-copy {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.footer-legal {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footer-legal a {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.3s;
+  cursor: pointer;
+}
+
+.footer-legal a:hover { color: var(--silver); }
+
+/* ========================================
+   ABOUT PAGE
+======================================== */
+.about-hero {
+  padding: 140px 2rem 80px;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.about-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 60vw; height: 100%;
+  background: radial-gradient(ellipse at right center, rgba(26, 79, 138, 0.1) 0%, transparent 60%);
+}
+
+.about-hero-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.about-brand-stmt {
+  font-family: var(--font-serif);
+  font-size: clamp(1.3rem, 2.5vw, 2rem);
+  font-weight: 300;
+  color: var(--silver-light);
+  line-height: 1.7;
+  border-left: 3px solid var(--blue-bright);
+  padding-left: 2rem;
+  margin-top: 2rem;
+}
+
+.narrative-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin: 4rem 0;
+}
+
+.narrative-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  padding: 2.5rem;
+  position: relative;
+}
+
+.narrative-step {
+  font-family: var(--font-tech);
+  font-size: 3rem;
+  font-weight: 700;
+  color: rgba(32, 96, 168, 0.15);
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+
+.narrative-card h3 {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: var(--white);
+  margin-bottom: 1rem;
+}
+
+.narrative-card p {
+  font-size: 0.88rem;
+  color: var(--silver);
+  line-height: 1.8;
+}
+
+/* Founder */
+.founder-profile {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 3rem;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  padding: 3rem;
+  margin: 3rem 0;
+}
+
+.founder-avatar {
+  width: 100%;
+  aspect-ratio: 1;
+  background: linear-gradient(135deg, var(--navy-light), var(--blue) 50%, var(--navy-mid));
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  color: var(--blue-bright);
+  border: 1px solid var(--glass-border);
+}
+
+.founder-info h3 {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 300;
+  color: var(--white);
+  margin-bottom: 0.5rem;
+}
+
+.founder-title {
+  font-family: var(--font-tech);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--blue-bright);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.founder-info p {
+  font-size: 0.92rem;
+  color: var(--silver);
+  line-height: 1.9;
+  margin-bottom: 1rem;
+}
+
+.founder-btns {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* Beliefs */
+.beliefs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.belief-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  padding: 2rem;
+  transition: all 0.3s;
+}
+
+.belief-card:hover {
+  border-color: var(--blue-bright);
+  transform: translateY(-2px);
+}
+
+.belief-keyword {
+  font-family: var(--font-tech);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--blue-bright);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.belief-card h4 {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  color: var(--white);
+  margin-bottom: 0.75rem;
+}
+
+.belief-card p {
+  font-size: 0.88rem;
+  color: var(--silver);
+  line-height: 1.8;
+}
+
+/* ========================================
+   SERVICES PAGE
+======================================== */
+.services-detailed {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.service-detail-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.service-detail-header {
+  padding: 2rem 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--glass-border);
+  cursor: pointer;
+}
+
+.service-detail-header:hover { background: rgba(26, 79, 138, 0.1); }
+
+.service-detail-title {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--white);
+}
+
+.service-detail-body {
+  padding: 2rem 2.5rem;
+  display: none;
+}
+
+.service-detail-body.open { display: block; }
+
+.pricing-tiers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.tier {
+  background: rgba(7, 13, 26, 0.5);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  padding: 1.5rem;
+}
+
+.tier.featured {
+  border-color: var(--blue-bright);
+  background: rgba(26, 79, 138, 0.15);
+}
+
+.tier-name {
+  font-family: var(--font-tech);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--blue-bright);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.tier-price {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  color: var(--white);
+  margin-bottom: 0.5rem;
+}
+
+.tier-desc {
+  font-size: 0.82rem;
+  color: var(--silver);
+  line-height: 1.7;
+}
+
+/* Process Steps */
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  position: relative;
+  margin: 3rem 0;
+}
+
+.process-steps::after {
+  content: '';
+  position: absolute;
+  top: 28px;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--blue), var(--blue-bright), var(--blue), transparent);
+}
+
+.process-step {
+  text-align: center;
+  padding: 0 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.process-step-num {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--navy-mid);
+  border: 2px solid var(--blue-bright);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-tech);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--blue-bright);
+  margin: 0 auto 1rem;
+}
+
+.process-step-name {
+  font-family: var(--font-tech);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--silver-light);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.process-step-desc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Testimonials */
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.testimonial-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  padding: 2rem;
+}
+
+.testimonial-text {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--silver-light);
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  position: relative;
+  padding-top: 1rem;
+}
+
+.testimonial-text::before {
+  content: '"';
+  position: absolute;
+  top: -0.5rem;
+  left: -0.25rem;
+  font-size: 3rem;
+  color: var(--blue-bright);
+  opacity: 0.4;
+  line-height: 1;
+  font-family: serif;
+}
+
+.testimonial-author {
+  font-family: var(--font-tech);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+/* ========================================
+   PORTFOLIO PAGE
+======================================== */
+.portfolio-filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--text-muted);
+  padding: 8px 18px;
+  border-radius: 2px;
+  font-family: var(--font-tech);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+  border-color: var(--blue-bright);
+  color: var(--blue-bright);
+  background: rgba(32, 96, 168, 0.1);
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.portfolio-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.portfolio-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--blue-bright);
+}
+
+.portfolio-card-visual {
+  height: 200px;
+  background: linear-gradient(135deg, var(--navy-light), var(--blue-mid));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.portfolio-card-visual::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(7, 13, 26, 0.8));
+}
+
+.portfolio-card-body { padding: 1.5rem; }
+
+.portfolio-tag {
+  font-family: var(--font-tech);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.portfolio-card h3 {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: var(--white);
+  margin-bottom: 0.75rem;
+}
+
+.portfolio-card p {
+  font-size: 0.85rem;
+  color: var(--silver);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.portfolio-metrics {
+  display: flex;
+  gap: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--glass-border);
+}
+
+.portfolio-metric {
+  display: flex;
+  flex-direction: column;
+}
+
+.portfolio-metric-v {
+  font-family: var(--font-tech);
+  font-size: 1.1rem;
+  color: var(--blue-bright);
+  font-weight: 600;
+}
+
+.portfolio-metric-l {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* ========================================
+   CONTENT / BLOG PAGE
+======================================== */
+.content-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.content-row {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  padding: 1.5rem 2rem;
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.content-row:hover {
+  border-color: var(--blue-bright);
+  transform: translateX(4px);
+}
+
+.content-row-type {
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  border: 1px solid var(--glass-border);
+}
+
+.content-row-body { flex: 1; }
+
+.content-row-label {
+  font-family: var(--font-tech);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--blue-bright);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.content-row h3 {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: var(--white);
+  margin-bottom: 0.5rem;
+}
+
+.content-row p {
+  font-size: 0.85rem;
+  color: var(--silver);
+  line-height: 1.7;
+}
+
+.content-row-meta {
+  flex-shrink: 0;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.read-time {
+  font-family: var(--font-tech);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* ========================================
+   CONTACT PAGE
+======================================== */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.contact-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  padding: 2.5rem;
+}
+
+.contact-card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.contact-card h3 {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  color: var(--white);
+  margin-bottom: 1rem;
+}
+
+.contact-card p {
+  font-size: 0.9rem;
+  color: var(--silver);
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group label {
+  font-family: var(--font-tech);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-border);
+  color: var(--text);
+  padding: 10px 14px;
+  font-family: var(--font-tc);
+  font-size: 0.88rem;
+  border-radius: 2px;
+  outline: none;
+  transition: border-color 0.3s;
+  width: 100%;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--blue-bright);
+}
+
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238da4be' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.form-textarea { resize: vertical; min-height: 100px; }
+
+.contact-info {
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--glass-border);
+  margin-top: 1rem;
+}
+
+.contact-info-item {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.contact-info-item span:first-child {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.contact-info-item span:last-child {
+  font-size: 0.88rem;
+  color: var(--silver);
+}
+
+/* ========================================
+   MEMBER TIERS
+======================================== */
+.membership-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.member-tier {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.member-tier.featured {
+  border-color: var(--blue-bright);
+  background: rgba(26, 79, 138, 0.15);
+}
+
+.member-tier.featured::before {
+  content: '推薦';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--blue-bright);
+  color: white;
+  font-family: var(--font-tech);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  padding: 3px 14px;
+  border-radius: 10px;
+}
+
+.member-tier-name {
+  font-family: var(--font-tech);
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  color: var(--blue-bright);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.member-tier-price {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  color: var(--white);
+  margin-bottom: 1rem;
+}
+
+.member-tier-price small {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.member-features {
+  list-style: none;
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
+
+.member-features li {
+  font-size: 0.85rem;
+  color: var(--silver);
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.member-features li::before {
+  content: '✓';
+  color: var(--blue-bright);
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+/* ========================================
+   SCROLL ANIMATION
+======================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ========================================
+   MOBILE NAV MENU
+======================================== */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  background: rgba(7, 13, 26, 0.97);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--glass-border);
+  padding: 1.5rem 2rem;
+  z-index: 999;
+  flex-direction: column;
+  gap: 0;
+}
+
+.mobile-menu.open { display: flex; }
+
+.mobile-menu a {
+  color: var(--silver-light);
+  text-decoration: none;
+  font-family: var(--font-tc);
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--glass-border);
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.mobile-menu a:hover { color: var(--blue-bright); }
+
+/* ========================================
+   TOAST NOTIFICATION
+======================================== */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--navy-light);
+  border: 1px solid var(--blue-bright);
+  color: var(--white);
+  padding: 1rem 1.5rem;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  z-index: 9999;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.3s ease;
+  max-width: 300px;
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .hero-inner { grid-template-columns: 1fr; text-align: center; }
+  .hero-subtitle { margin: 0 auto 2rem; }
+  .hero-ctas { justify-content: center; }
+  .hero-visual { display: none; }
+  .stats-inner { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .stat-item:nth-child(3) { border-right: none; }
+  .pain-grid { grid-template-columns: 1fr; }
+  .services-grid { grid-template-columns: 1fr; }
+  .content-grid { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+  .narrative-grid { grid-template-columns: 1fr; }
+  .founder-profile { grid-template-columns: 1fr; }
+  .beliefs-grid { grid-template-columns: 1fr; }
+  .pricing-tiers { grid-template-columns: 1fr; }
+  .process-steps { grid-template-columns: repeat(3, 1fr); }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .portfolio-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .membership-grid { grid-template-columns: 1fr; }
+  .case-inner { grid-template-columns: 1fr; }
+  .case-meta { border-right: none; padding-right: 0; border-bottom: 1px solid var(--glass-border); padding-bottom: 2rem; }
+  .process-steps::after { display: none; }
+}
+
+@media (max-width: 600px) {
+  .stats-inner { grid-template-columns: repeat(2, 1fr); }
+  .stat-item:nth-child(3) { border-right: 1px solid var(--glass-border); }
+  .stat-item:nth-child(2), .stat-item:nth-child(4) { border-right: none; }
+  .footer-inner { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .newsletter-form { flex-direction: column; }
+}
+
+/* ========================================
+   CUSTOM SCROLLBAR
+======================================== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--navy); }
+::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--blue-bright); }
+
+/* ========================================
+   SELECTION
+======================================== */
+::selection {
+  background: rgba(32, 96, 168, 0.35);
+  color: var(--white);
+}
+
+/* ========================================
+   SUB-SERVICES PAGES
+======================================== */
+.sub-service-hero {
+  padding: 140px 2rem 80px;
+  position: relative;
+  z-index: 1;
+}
+
+.tagline-flip {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  padding: 2rem 2.5rem;
+  border-left: 4px solid var(--blue-bright);
+  margin: 2rem 0;
+  border-radius: 2px;
+}
+
+.tagline-flip p {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--silver-light);
+  line-height: 1.7;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+}
+
+.comparison-table th {
+  font-family: var(--font-tech);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 1rem 1.5rem;
+  text-align: left;
+  border-bottom: 2px solid var(--blue);
+  color: var(--blue-bright);
+}
+
+.comparison-table td {
+  padding: 1rem 1.5rem;
+  font-size: 0.88rem;
+  border-bottom: 1px solid var(--glass-border);
+  color: var(--silver);
+  vertical-align: top;
+}
+
+.comparison-table tr:hover td {
+  background: rgba(26, 79, 138, 0.08);
+}
+
+.comparison-table .col-bad { color: var(--text-muted); }
+.comparison-table .col-good { color: var(--silver-light); }
+
+.faq-list { display: flex; flex-direction: column; gap: 1rem; margin: 2rem 0; }
+
+.faq-item {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.faq-q {
+  padding: 1.25rem 1.5rem;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  color: var(--white);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  transition: background 0.3s;
+}
+
+.faq-q:hover { background: rgba(26, 79, 138, 0.1); }
+
+.faq-toggle {
+  font-family: var(--font-tech);
+  font-size: 1.2rem;
+  color: var(--blue-bright);
+  flex-shrink: 0;
+  transition: transform 0.3s;
+}
+
+.faq-item.open .faq-toggle { transform: rotate(45deg); }
+
+.faq-a {
+  padding: 0 1.5rem;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.faq-item.open .faq-a { max-height: 200px; padding: 1rem 1.5rem 1.5rem; }
+
+.faq-a p {
+  font-size: 0.9rem;
+  color: var(--silver);
+  line-height: 1.8;
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+  margin: 2rem 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--blue-bright), var(--blue), transparent);
+}
+
+.timeline-item {
+  position: relative;
+  padding: 1.5rem 0 1.5rem 2rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.timeline-item:last-child { border-bottom: none; }
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 1.8rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--blue-bright);
+  border: 2px solid var(--navy);
+}
+
+.timeline-phase {
+  font-family: var(--font-tech);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--blue-bright);
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.timeline-title {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  color: var(--white);
+  margin-bottom: 0.5rem;
+}
+
+.timeline-desc {
+  font-size: 0.85rem;
+  color: var(--silver);
+  line-height: 1.7;
+}
+
+/* ========================================
+   AI PAGE SPECIFIC
+======================================== */
+.ai-scenarios {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.ai-scenario {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.ai-scenario:hover {
+  border-color: var(--blue-bright);
+  transform: translateY(-4px);
+}
+
+.ai-scenario-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+
+.ai-scenario h4 {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  color: var(--white);
+  margin-bottom: 0.75rem;
+}
+
+.ai-scenario ul {
+  list-style: none;
+  text-align: left;
+}
+
+.ai-scenario ul li {
+  font-size: 0.82rem;
+  color: var(--silver);
+  padding: 0.3rem 0;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.ai-scenario ul li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--blue-bright);
+  font-size: 1.2rem;
+  line-height: 1.1;
+}
+
+@media (max-width: 900px) {
+  .ai-scenarios { grid-template-columns: 1fr; }
+}
+
+/* Page transition */
+.page { animation: fadeInPage 0.4s ease; }
+
+@keyframes fadeInPage {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<!-- Particle Canvas -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- Navigation -->
+<nav id="main-nav">
+  <a class="nav-logo" onclick="showPage('home')">
+    <img src="logo.png" alt="I Creation Logo">
+    <div>
+      <div class="nav-logo-text">I CREATION</div>
+      <div class="nav-logo-sub">策　藝</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')">首頁</a></li>
+    <li><a onclick="showPage('about')">關於我們</a></li>
+    <li><a onclick="showPage('services')">服務總覽</a></li>
+    <li><a onclick="showPage('portfolio')">案例展示</a></li>
+    <li><a onclick="showPage('content')">知識內容</a></li>
+    <li><a onclick="showPage('contact')" class="nav-cta">開始對話</a></li>
+  </ul>
+  <div class="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <a onclick="showPage('home'); toggleMenu()">首頁</a>
+  <a onclick="showPage('about'); toggleMenu()">關於我們</a>
+  <a onclick="showPage('services'); toggleMenu()">服務總覽</a>
+  <a onclick="showPage('portfolio'); toggleMenu()">案例展示</a>
+  <a onclick="showPage('content'); toggleMenu()">知識內容</a>
+  <a onclick="showPage('contact'); toggleMenu()">聯繫我們</a>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- ==================== PAGE: HOME ==================== -->
+<div class="page active" id="page-home">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-eyebrow">藝術 × 策略 × 文化影響力</div>
+        <h1 class="hero-title">
+          讓藝術，成為你<br>
+          最有力的<em>品牌語言</em>
+        </h1>
+        <p class="hero-subtitle">
+          I Creation 策藝協助企業與藝術家共同創造文化影響力。我們相信藝術不是裝飾，它是策略、是身份認同、是品牌能說出的最有力的語言。
+        </p>
+        <div class="hero-ctas">
+          <button class="btn-primary" onclick="showPage('service-enterprise')">
+            <span>企業藝術策略 →</span>
+          </button>
+          <button class="btn-outline" onclick="showPage('service-artist')">
+            藝術家職涯加速
+          </button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-logo-wrap">
+          <div class="hero-logo-glow"></div>
+          <div class="hero-logo-ring"></div>
+          <img class="hero-logo-img" src="logo.png" alt="I Creation">
+        </div>
+        <div class="hero-tag hero-tag-1">ART × STRATEGY</div>
+        <div class="hero-tag hero-tag-2">文化影響力</div>
+        <div class="hero-tag hero-tag-3">SINCE 2022</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stats-inner">
+      <div class="stat-item reveal">
+        <div class="stat-number" data-count="20">0</div>
+        <div class="stat-label">企業合作品牌</div>
+      </div>
+      <div class="stat-item reveal reveal-delay-1">
+        <div class="stat-number" data-count="150">0</div>
+        <div class="stat-label">社群藝術家</div>
+      </div>
+      <div class="stat-item reveal reveal-delay-2">
+        <div class="stat-number" data-count="8">0</div>
+        <div class="stat-label">出版作品</div>
+      </div>
+      <div class="stat-item reveal reveal-delay-3">
+        <div class="stat-number" data-count="4">0</div>
+        <div class="stat-label">每年工作坊期數</div>
+      </div>
+      <div class="stat-item reveal reveal-delay-4">
+        <div class="stat-number" data-count="3">0</div>
+        <div class="stat-label">年文化影響力</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pain Points -->
+  <section class="section pain-points">
+    <div class="section-inner">
+      <div class="section-eyebrow">雙軌服務</div>
+      <h2 class="section-title">你的痛點，我們都懂</h2>
+      <div class="pain-grid reveal">
+        <div class="pain-card">
+          <div class="pain-card-icon">🏢</div>
+          <h3>品牌想透過藝術說話，卻不知道從哪裡開始</h3>
+          <ul class="pain-list">
+            <li>每年藝文活動花費可觀，卻難以量化品牌效益</li>
+            <li>找不到能精準詮釋品牌精神的藝術家</li>
+            <li>藝術合作停留在裝飾層次，無法深化品牌識別</li>
+          </ul>
+          <div style="margin-top:2rem">
+            <button class="btn-primary" onclick="showPage('service-enterprise')"><span>了解企業服務 →</span></button>
+          </div>
+          <div class="pain-divider"></div>
+        </div>
+        <div class="pain-card">
+          <div class="pain-card-icon">🎨</div>
+          <h3>你有才華，但市場還沒發現你</h3>
+          <ul class="pain-list">
+            <li>擁有精湛技藝，卻不知如何將創作轉化為穩定收入</li>
+            <li>缺乏商業溝通工具，難以接觸企業合作機會</li>
+            <li>孤立創作，沒有社群支持與資源分享</li>
+          </ul>
+          <div style="margin-top:2rem">
+            <button class="btn-primary" onclick="showPage('service-artist')"><span>了解藝術家方案 →</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Preview -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-eyebrow">四大核心服務</div>
+      <h2 class="section-title">我們提供的<em>解決方案</em></h2>
+      <div class="services-grid">
+        <div class="service-card reveal" onclick="showPage('service-enterprise')">
+          <div class="service-number">01 / SERVICE</div>
+          <div class="service-icon">🏛️</div>
+          <h3 class="service-name">企業藝術策略顧問</h3>
+          <p class="service-desc">從品牌活化到年度策略合約，協助企業將藝術轉化為具有競爭力的品牌資產，建立可複利增長的文化影響力。</p>
+          <div class="service-link">深入了解 →</div>
+        </div>
+        <div class="service-card reveal reveal-delay-1" onclick="showPage('service-artist')">
+          <div class="service-number">02 / SERVICE</div>
+          <div class="service-icon">🚀</div>
+          <h3 class="service-name">藝術家職涯加速</h3>
+          <p class="service-desc">提供學校沒教的商業工具與社群支援，協助有才華的藝術家讓世界看見你，並開拓可持續的職涯路徑。</p>
+          <div class="service-link">深入了解 →</div>
+        </div>
+        <div class="service-card reveal reveal-delay-2" onclick="showPage('service-publish')">
+          <div class="service-number">03 / SERVICE</div>
+          <div class="service-icon">📚</div>
+          <h3 class="service-name">出版顧問服務</h3>
+          <p class="service-desc">從概念到出版成品的全程陪跑，協助藝術家出版自己的作品，留下遺產、建立權威、創造被動收入。</p>
+          <div class="service-link">深入了解 →</div>
+        </div>
+        <div class="service-card reveal reveal-delay-3" onclick="showPage('service-ai')">
+          <div class="service-number">04 / SERVICE</div>
+          <div class="service-icon">⚡</div>
+          <h3 class="service-name">AI 藝術內容製作</h3>
+          <p class="service-desc">運用生成式 AI 為藝術家與品牌打造視覺內容。人類創意，AI 放大——重點永遠是你想說的故事。</p>
+          <div class="service-link">深入了解 →</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Case -->
+  <section class="section featured-case">
+    <div class="section-inner">
+      <div class="section-eyebrow">精選案例</div>
+      <h2 class="section-title">真實的<em>文化影響力</em></h2>
+      <div class="case-inner reveal">
+        <div class="case-meta">
+          <div class="case-industry">⬡ 文化 × 零售</div>
+          <h3 class="case-title">城市美學節品牌藝術策略</h3>
+          <div class="case-metrics">
+            <div class="case-metric">
+              <span class="case-metric-value">280K+</span>
+              <span class="case-metric-label">線上觸及人次</span>
+            </div>
+            <div class="case-metric">
+              <span class="case-metric-value">12</span>
+              <span class="case-metric-label">合作藝術家</span>
+            </div>
+            <div class="case-metric">
+              <span class="case-metric-value">340%</span>
+              <span class="case-metric-label">品牌聲量成長</span>
+            </div>
+          </div>
+        </div>
+        <div class="case-content">
+          <h3>挑戰 → 策略 → 影響力</h3>
+          <p>一個在地零售品牌希望重新定義自身的文化定位，卻苦於缺乏藝術策略整合能力。I Creation 以「城市人的日常美學」為主軸，串聯 12 位跨域藝術家，從空間裝置到數位內容全面規劃，並設計完整的品牌藝術夥伴合約框架。</p>
+          <p>最終活動不只成為話題事件，更為品牌建立起長期的藝術家社群與持續產出的內容資產，實現「活動結束，影響力延續」的策略目標。</p>
+          <button class="btn-outline" onclick="showPage('portfolio')">查看更多案例 →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Founder Statement -->
+  <section class="section founder-section">
+    <div class="section-inner">
+      <div class="section-eyebrow" style="justify-content:center">創辦人宣言</div>
+      <div class="founder-quote reveal">
+        我看見太多有才華的藝術家在市場邊緣掙扎，也看見太多企業把藝術當成裝飾性的開支。I Creation 的存在，是為了終結這個斷層——讓藝術真正成為企業最具競爭力的策略資產，讓每一位藝術家都能以自己的才華，在商業世界中站穩腳步。
+      </div>
+      <div class="founder-attribution" style="text-align:center;margin-bottom:2rem">— I CREATION 策藝 創辦人</div>
+      <div style="text-align:center">
+        <button class="btn-outline" onclick="showPage('about')">了解我們的故事 →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content Preview -->
+  <section class="section" style="background:var(--navy-mid)">
+    <div class="section-inner">
+      <div class="section-eyebrow">知識內容</div>
+      <h2 class="section-title">最新的<em>深度思考</em></h2>
+      <div class="content-grid">
+        <div class="content-card reveal">
+          <div class="content-type-bar content-type-article"></div>
+          <div class="content-card-body">
+            <div class="content-type-label">📝 深度文章</div>
+            <h4>當企業開始收藏藝術：從投資到策略資產的轉變</h4>
+            <p>越來越多企業將藝術收藏從純粹的美學考量，轉型為有明確策略意圖的品牌建設行為...</p>
+          </div>
+          <div class="content-meta">閱讀時間：8 分鐘 · 品牌策略</div>
+        </div>
+        <div class="content-card reveal reveal-delay-1">
+          <div class="content-type-bar content-type-podcast"></div>
+          <div class="content-card-body">
+            <div class="content-type-label">🎙️ Podcast</div>
+            <h4>EP.23 藝術家如何定價自己的創作？商業思維的切入點</h4>
+            <p>在這一集，我們邀請到三位成功轉型的藝術工作者，分享他們如何重新思考自身的市場價值...</p>
+          </div>
+          <div class="content-meta">收聽時間：42 分鐘 · 職涯發展</div>
+        </div>
+        <div class="content-card reveal reveal-delay-2">
+          <div class="content-type-bar content-type-video"></div>
+          <div class="content-card-body">
+            <div class="content-type-label">▶️ YouTube</div>
+            <h4>AI 時代，藝術家不會消失：生成式 AI 的正確使用姿態</h4>
+            <p>許多藝術家恐懼 AI 的到來，但那些把 AI 視為工具的創作者，正在拓展前所未有的創作邊界...</p>
+          </div>
+          <div class="content-meta">影片長度：18 分鐘 · AI 藝術</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:2.5rem">
+        <button class="btn-outline" onclick="showPage('content')">探索更多內容 →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="section newsletter">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-eyebrow" style="justify-content:center">文化策略電子報</div>
+      <h2 class="section-title">每月洞見，<em>直送信箱</em></h2>
+      <p class="section-subtitle" style="margin:0 auto 2rem">
+        每月一期，收錄藝術策略深度分析、藝術家職涯案例、產業趨勢觀察。訂閱超過 2,000 位文化策略愛好者的共同選擇。
+      </p>
+      <div class="newsletter-form">
+        <input type="email" class="newsletter-input" placeholder="輸入你的 Email">
+        <button class="btn-primary" onclick="handleSubscribe()"><span>立即訂閱</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <img src="logo.png" alt="I Creation">
+          <div>
+            <div style="font-family:var(--font-tech);font-size:1rem;color:var(--white);letter-spacing:0.15em">I CREATION</div>
+            <div style="font-size:0.75rem;color:var(--silver)">策　藝</div>
+          </div>
+        </div>
+        <p class="footer-tagline">讓藝術，成為你最有力的品牌語言。</p>
+      </div>
+      <div class="footer-col">
+        <h5>服務</h5>
+        <ul class="footer-links">
+          <li><a onclick="showPage('service-enterprise')">企業藝術策略顧問</a></li>
+          <li><a onclick="showPage('service-artist')">藝術家職涯加速</a></li>
+          <li><a onclick="showPage('service-publish')">出版顧問服務</a></li>
+          <li><a onclick="showPage('service-ai')">AI 藝術內容製作</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>探索</h5>
+        <ul class="footer-links">
+          <li><a onclick="showPage('about')">關於我們</a></li>
+          <li><a onclick="showPage('portfolio')">案例展示</a></li>
+          <li><a onclick="showPage('content')">知識內容</a></li>
+          <li><a onclick="showPage('contact')">聯繫我們</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>聯絡</h5>
+        <ul class="footer-links">
+          <li><a>hello@icreation.tw</a></li>
+          <li><a>Instagram</a></li>
+          <li><a>LinkedIn</a></li>
+          <li><a>Podcast 訂閱</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 I Creation 策藝 版權所有</div>
+      <div class="footer-legal">
+        <a>隱私權政策</a>
+        <a>服務條款</a>
+        <a>Cookie 設定</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ==================== PAGE: ABOUT ==================== -->
+<div class="page" id="page-about">
+  <div class="about-hero">
+    <div class="about-hero-inner">
+      <div class="section-eyebrow">我們的故事</div>
+      <h1 class="section-title" style="font-size:clamp(2rem,4vw,3.5rem)">
+        藝術×商業，<br>我們搭起這座橋
+      </h1>
+      <div class="about-brand-stmt reveal">
+        我們相信藝術不是裝飾——它是策略、是身份認同、是品牌能說出的最有力的語言。
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="narrative-grid">
+        <div class="narrative-card reveal">
+          <div class="narrative-step">01</div>
+          <h3>市場上的斷層</h3>
+          <p>企業有資源，藝術家有才華，但兩者之間存在一道深深的語言斷層。企業用 KPI 衡量一切，藝術家以感受表達一切——當兩者相遇，往往是誤解、失落與機會的流逝。</p>
+        </div>
+        <div class="narrative-card reveal reveal-delay-1">
+          <div class="narrative-step">02</div>
+          <h3>創辦人的洞察</h3>
+          <p>跨越設計、策略顧問與藝術圈的工作歷程，讓我看見一個巨大的缺口：市場上從來沒有一個機構，能同時用策略語言與藝術語言流利溝通。這正是 I Creation 誕生的契機。</p>
+        </div>
+        <div class="narrative-card reveal reveal-delay-2">
+          <div class="narrative-step">03</div>
+          <h3>我們的使命</h3>
+          <p>I Creation 策藝的使命，是成為藝術與商業之間最精準的翻譯者。我們不只是媒合平台，我們是策略夥伴——為企業建立文化資產，為藝術家打開市場之門。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--navy-mid)">
+    <div class="section-inner">
+      <div class="section-eyebrow">創辦人</div>
+      <div class="founder-profile reveal">
+        <div class="founder-avatar">人</div>
+        <div class="founder-info">
+          <h3>I Creation 創辦人</h3>
+          <div class="founder-title">藝術策略顧問 / 出版人 / 社群建立者</div>
+          <p>擁有藝術管理與商業策略的雙重背景，曾任職於國際創意顧問公司及本土文化機構，深度參與超過 30 個企業藝術合作專案。</p>
+          <p>相信每一個品牌都有屬於自己的藝術語言等待被發現，也相信每一位藝術家的才華都值得被市場公平對待。創立 I Creation，正是為了讓這兩件事同時成真。</p>
+          <p>著有《藝術策略：讓品牌說出最有力的語言》等多本商業藝術類書籍，現為多所大學藝術管理課程的業師。</p>
+          <div class="founder-btns">
+            <button class="btn-primary" onclick="showPage('contact')"><span>預約免費諮詢通話</span></button>
+            <button class="btn-outline">LinkedIn →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-eyebrow">核心信念</div>
+      <h2 class="section-title">四個我們堅守的<em>信念</em></h2>
+      <div class="beliefs-grid">
+        <div class="belief-card reveal">
+          <div class="belief-keyword">BRIDGE 橋接</div>
+          <h4>讓不同語言的人相遇</h4>
+          <p>企業決策者與藝術工作者需要的不是翻譯機，而是能讓雙方都感受到被理解的橋樑。我們存在於這個對話的中心。</p>
+        </div>
+        <div class="belief-card reveal reveal-delay-1">
+          <div class="belief-keyword">TRANSLATE 翻譯</div>
+          <h4>把美學轉化為策略語言</h4>
+          <p>一件藝術作品的感動，必須能被轉譯為品牌策略的具體價值。我們是這個轉譯過程中最精準的語言工作者。</p>
+        </div>
+        <div class="belief-card reveal reveal-delay-2">
+          <div class="belief-keyword">AMPLIFY 放大</div>
+          <h4>讓才華觸及更廣的世界</h4>
+          <p>藝術家的才華不應該只在小圈子裡流傳。透過策略性的市場佈局，我們幫助優秀的創作者放大影響力，觸及真正需要他們的受眾。</p>
+        </div>
+        <div class="belief-card reveal reveal-delay-3">
+          <div class="belief-keyword">BUILD 建立</div>
+          <h4>創造可持續的文化資產</h4>
+          <p>最好的藝術合作不是一次性的活動，而是品牌文化的持續積累。我們幫助企業與藝術家共同建立可複利增長的長期資產。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--navy-mid)">
+    <div class="section-inner">
+      <div class="section-eyebrow">合作網絡</div>
+      <h2 class="section-title">150+ 位藝術工作者，<em>與我們同行</em></h2>
+      <div class="services-grid">
+        <div class="service-card reveal">
+          <div class="service-icon">🎭</div>
+          <h3 class="service-name">視覺藝術家</h3>
+          <p class="service-desc">「加入 I Creation 社群後，我接到了人生中第一個企業合作案，金額超過我一整年的個展收入。」</p>
+        </div>
+        <div class="service-card reveal reveal-delay-1">
+          <div class="service-icon">📸</div>
+          <h3 class="service-name">攝影工作者</h3>
+          <p class="service-desc">「他們幫我理清了自己的市場定位，讓我知道如何用企業能聽懂的語言，介紹我的創作價值。」</p>
+        </div>
+        <div class="service-card reveal reveal-delay-2">
+          <div class="service-icon">✍️</div>
+          <h3 class="service-name">插畫與設計師</h3>
+          <p class="service-desc">「工作坊裡學到的定價策略，讓我的案件單價在半年內翻倍。這是學校完全沒教過的東西。」</p>
+        </div>
+        <div class="service-card reveal reveal-delay-3">
+          <div class="service-icon">🎵</div>
+          <h3 class="service-name">跨域創作者</h3>
+          <p class="service-desc">「I Creation 不只是一個資源平台，更是一個讓我願意持續成長的社群。這裡的人都在認真思考藝術的未來。」</p>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:2rem">
+        <button class="btn-primary" onclick="showPage('service-artist')"><span>加入藝術家社群 →</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer ref -->
+  <div style="position:relative;z-index:1">
+    <footer>
+      <div class="footer-bottom" style="max-width:1200px;margin:0 auto;padding-top:2rem">
+        <div class="footer-copy">© 2025 I Creation 策藝 版權所有</div>
+        <div class="footer-legal">
+          <a onclick="showPage('home')">回到首頁</a>
+          <a onclick="showPage('contact')">聯繫我們</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<!-- ==================== PAGE: SERVICES ==================== -->
+<div class="page" id="page-services">
+  <section class="sub-service-hero">
+    <div class="section-inner">
+      <div class="section-eyebrow">服務總覽</div>
+      <h1 class="section-title">四種方式，我們共同<br>創造<em>文化影響力</em></h1>
+      <p class="section-subtitle">無論是建立品牌文化的企業，還是建立職涯的藝術家，都能在這裡找到屬於你的路徑。</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="services-detailed">
+        <div class="service-detail-card reveal">
+          <div class="service-detail-header" onclick="toggleAccordion(this)">
+            <div>
+              <div style="font-family:var(--font-tech);font-size:0.7rem;color:var(--blue-bright);letter-spacing:0.2em;margin-bottom:0.5rem">01 / ENTERPRISE</div>
+              <div class="service-detail-title">🏛️ 企業藝術策略顧問</div>
+            </div>
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="service-detail-body">
+            <p style="color:var(--silver);margin-bottom:1.5rem;line-height:1.8">協助企業將藝術從裝飾性支出，轉型為具有策略意圖的品牌資產。從單次工作坊到年度顧問合約，我們提供完整的陪跑服務。</p>
+            <div class="pricing-tiers">
+              <div class="tier">
+                <div class="tier-name">藝文探索方案</div>
+                <div class="tier-price">NT$ 30,000 起</div>
+                <div class="tier-desc">單次藝術策略工作坊 + 品牌藝術方向提案，適合初次探索的企業。</div>
+              </div>
+              <div class="tier featured">
+                <div class="tier-name">品牌藝術活化</div>
+                <div class="tier-price">NT$ 150,000 起</div>
+                <div class="tier-desc">完整藝術活動策劃與執行，包含藝術家媒合、內容製作、成效報告。</div>
+              </div>
+              <div class="tier">
+                <div class="tier-name">年度策略顧問</div>
+                <div class="tier-price">依專案議定</div>
+                <div class="tier-desc">長期品牌藝術支柱建立，季度策略規劃，成為品牌的文化資產夥伴。</div>
+              </div>
+            </div>
+            <div style="margin-top:1.5rem">
+              <button class="btn-primary" onclick="showPage('service-enterprise')"><span>了解詳細內容 →</span></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="service-detail-card reveal">
+          <div class="service-detail-header" onclick="toggleAccordion(this)">
+            <div>
+              <div style="font-family:var(--font-tech);font-size:0.7rem;color:var(--blue-bright);letter-spacing:0.2em;margin-bottom:0.5rem">02 / ARTIST</div>
+              <div class="service-detail-title">🚀 藝術家職涯加速</div>
+            </div>
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="service-detail-body">
+            <p style="color:var(--silver);margin-bottom:1.5rem;line-height:1.8">學校教創作，市場獎勵懂得溝通的人。我們兩者都教。透過會員制社群、工作坊與一對一諮詢，為藝術工作者建立完整的市場生存工具箱。</p>
+            <div class="membership-grid">
+              <div class="member-tier">
+                <div class="member-tier-name">觀察者</div>
+                <div class="member-tier-price">免費 <small>/ 月</small></div>
+                <ul class="member-features">
+                  <li>接收公開知識內容</li>
+                  <li>電子報訂閱</li>
+                  <li>社群活動資訊</li>
+                </ul>
+                <button class="btn-outline" style="width:100%;padding:10px">立即加入</button>
+              </div>
+              <div class="member-tier featured">
+                <div class="member-tier-name">實踐者</div>
+                <div class="member-tier-price">NT$ 980 <small>/ 月</small></div>
+                <ul class="member-features">
+                  <li>專屬策略電子報</li>
+                  <li>私密社群討論區</li>
+                  <li>每月線上問答直播</li>
+                  <li>工作坊早鳥優惠</li>
+                </ul>
+                <button class="btn-primary" style="width:100%"><span>選擇此方案</span></button>
+              </div>
+              <div class="member-tier">
+                <div class="member-tier-name">加速者</div>
+                <div class="member-tier-price">NT$ 3,500 <small>/ 季</small></div>
+                <ul class="member-features">
+                  <li>包含實踐者所有權益</li>
+                  <li>每季一對一職涯諮詢</li>
+                  <li>藝術家名錄登錄</li>
+                  <li>企業媒合優先推薦</li>
+                </ul>
+                <button class="btn-outline" style="width:100%;padding:10px">選擇此方案</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="service-detail-card reveal">
+          <div class="service-detail-header" onclick="toggleAccordion(this)">
+            <div>
+              <div style="font-family:var(--font-tech);font-size:0.7rem;color:var(--blue-bright);letter-spacing:0.2em;margin-bottom:0.5rem">03 / PUBLISHING</div>
+              <div class="service-detail-title">📚 出版顧問服務</div>
+            </div>
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="service-detail-body">
+            <p style="color:var(--silver);margin-bottom:1.5rem;line-height:1.8">每位藝術家心中都有一本書。我們提供從概念到實體出版的全程陪跑，協助藝術家留下遺產、建立權威，並創造持續的被動收入來源。</p>
+            <div class="pricing-tiers">
+              <div class="tier">
+                <div class="tier-name">出版諮詢顧問</div>
+                <div class="tier-price">NT$ 15,000 起</div>
+                <div class="tier-desc">書籍概念發展、出版企劃書撰寫、出版社洽談策略。</div>
+              </div>
+              <div class="tier featured">
+                <div class="tier-name">出版全程陪跑</div>
+                <div class="tier-price">NT$ 80,000 起</div>
+                <div class="tier-desc">從編輯、設計排版、印製到發行宣傳的完整出版服務。</div>
+              </div>
+            </div>
+            <div style="margin-top:1.5rem">
+              <button class="btn-primary" onclick="showPage('service-publish')"><span>了解出版流程 →</span></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="service-detail-card reveal">
+          <div class="service-detail-header" onclick="toggleAccordion(this)">
+            <div>
+              <div style="font-family:var(--font-tech);font-size:0.7rem;color:var(--blue-bright);letter-spacing:0.2em;margin-bottom:0.5rem">04 / AI + ART</div>
+              <div class="service-detail-title">⚡ AI 藝術內容製作</div>
+            </div>
+            <div class="faq-toggle">+</div>
+          </div>
+          <div class="service-detail-body">
+            <p style="color:var(--silver);margin-bottom:1.5rem;line-height:1.8">人類創意，AI 放大。我們運用最新的生成式 AI 工具，為企業與藝術家打造高品質視覺內容。AI 只是工具，如同相機或合成器，重點是你想說的故事。</p>
+            <div class="pricing-tiers">
+              <div class="tier">
+                <div class="tier-name">企業品牌視覺</div>
+                <div class="tier-price">NT$ 25,000 起</div>
+                <div class="tier-desc">品牌視覺語言開發、AI 輔助形象照、活動視覺素材。</div>
+              </div>
+              <div class="tier">
+                <div class="tier-name">藝術家品牌套件</div>
+                <div class="tier-price">NT$ 12,000 起</div>
+                <div class="tier-desc">個人品牌視覺整合、作品集視覺化、社群內容素材包。</div>
+              </div>
+              <div class="tier">
+                <div class="tier-name">出版品視覺</div>
+                <div class="tier-price">NT$ 18,000 起</div>
+                <div class="tier-desc">書籍封面概念、內頁插圖、行銷素材全套設計。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="section" style="background:var(--navy-mid)">
+    <div class="section-inner">
+      <div class="section-eyebrow">合作流程</div>
+      <h2 class="section-title">五個步驟，<em>創造影響力</em></h2>
+      <div class="process-steps reveal">
+        <div class="process-step">
+          <div class="process-step-num">1</div>
+          <div class="process-step-name">探索</div>
+          <div class="process-step-desc">深度了解你的需求與目標</div>
+        </div>
+        <div class="process-step">
+          <div class="process-step-num">2</div>
+          <div class="process-step-name">策略</div>
+          <div class="process-step-desc">制定客製化的藝術策略方案</div>
+        </div>
+        <div class="process-step">
+          <div class="process-step-num">3</div>
+          <div class="process-step-name">創作</div>
+          <div class="process-step-desc">媒合最適合的藝術工作者</div>
+        </div>
+        <div class="process-step">
+          <div class="process-step-num">4</div>
+          <div class="process-step-name">執行</div>
+          <div class="process-step-desc">全程陪跑確保品質與效益</div>
+        </div>
+        <div class="process-step">
+          <div class="process-step-num">5</div>
+          <div class="process-step-name">影響力</div>
+          <div class="process-step-desc">量化成果，持續優化策略</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-eyebrow">客戶見證</div>
+      <h2 class="section-title">他們說，<em>我們做到了</em></h2>
+      <div class="testimonials-grid">
+        <div class="testimonial-card reveal">
+          <div class="testimonial-text">與 I Creation 合作後，我終於理解藝術策略和藝術贊助的本質差異。這不是一次性的公關活動，而是品牌基因的一部分。</div>
+          <div class="testimonial-author">— 某消費品牌行銷總監 · 企業客戶</div>
+        </div>
+        <div class="testimonial-card reveal reveal-delay-1">
+          <div class="testimonial-text">加入社群的第三個月，我接到了人生第一個五位數的企業插畫案。那是我在所有工作坊裡學到的溝通技巧，讓對方願意付出這個價格。</div>
+          <div class="testimonial-author">— 插畫藝術家 · 加速者會員</div>
+        </div>
+        <div class="testimonial-card reveal reveal-delay-2">
+          <div class="testimonial-text">他們幫我把腦子裡存了十年的想法，整理成一本有清晰架構和市場定位的書。出版後的兩個月，我被邀請去演講的次數多了三倍。</div>
+          <div class="testimonial-author">— 獨立策展人 · 出版顧問服務客戶</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ==================== PAGE: SERVICE ENTERPRISE ==================== -->
+<div class="page" id="page-service-enterprise">
+  <section class="sub-service-hero">
+    <div class="section-inner">
+      <div class="section-eyebrow">01 / ENTERPRISE SERVICE</div>
+      <h1 class="section-title">讓藝術，成為你最具<br>競爭力的<em>品牌資產</em></h1>
+      <p class="section-subtitle">多數企業做活動，少數企業做策略。活動會結束，策略會複利增長。</p>
+      <button class="btn-primary" onclick="showPage('contact')"><span>預約免費策略通話 →</span></button>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-eyebrow">觀念翻轉</div>
+      <h2 class="section-title">重新理解<em>企業與藝術</em>的關係</h2>
+      <div class="services-grid">
+        <div class="service-card reveal">
+          <h3 class="service-name" style="font-size:1.1rem">活動 vs. 策略</h3>
+          <p class="service-desc">活動帶來短暫的聲量，策略建立持久的品牌基因。我們幫你從「辦活動」升級為「建立藝術策略生態」。</p>
+        </div>
+        <div class="service-card reveal reveal-delay-1">
+          <h3 class="service-name" style="font-size:1.1rem">裝飾 vs. 資產</h3>
+          <p class="service-desc">藝術品不只是牆上的裝飾，而是可以被反覆引用、持續增值的品牌文化資本。</p>
+        </div>
+        <div class="service-card reveal reveal-delay-2">
+          <h3 class="service-name" style="font-size:1.1rem">交易 vs. 夥伴</h3>
+          <p class="service-desc">雇用是一次性的交易，夥伴關係是長期的資產。我們幫品牌建立長期的藝術家夥伴網絡。</p>
+        </div>
+        <div class="service-card reveal reveal-delay-3">
+          <h3 class="service-name" style="font-size:1.1rem">CSR vs. 品牌建設</h3>
+          <p class="service-desc">藝術投資不只是社會責任的展現，更是品牌軟實力的核心建構。兩者可以同時實現。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--navy-mid)">
+    <div class="section-inner">
+      <div class="section-eyebrow">方案說明</div>
+      <h2 class="section-title">三個層次，<em>對應你的需求</em></h2>
+      <div class="pricing-tiers" style="grid-template-columns:repeat(3,1fr);gap:1.5rem">
+        <div class="tier reveal" style="padding:2rem">
+          <div class="tier-name">藝文探索方案</div>
+          <div class="tier-price" style="font-size:1.8rem;margin:1rem 0">NT$ 30,000 起</div>
+          <p class="tier-desc" style="margin-bottom:1.5rem">適合初次探索品牌藝術方向的企業。包含一次深度工作坊與品牌藝術方向提案報告。</p>
+          <ul class="member-features">
+            <li>半天品牌藝術工作坊</li>
+            <li>藝術方向診斷報告</li>
+            <li>3 位藝術家媒合建議</li>
+          </ul>
+        </div>
+        <div class="tier featured reveal reveal-delay-1" style="padding:2rem">
+          <div class="tier-name">品牌藝術活化方案</div>
+          <div class="tier-price" style="font-size:1.8rem;margin:1rem 0">NT$ 150,000 起</div>
+          <p class="tier-desc" style="margin-bottom:1.5rem">完整的品牌藝術活動策劃與執行，包含藝術家媒合、內容製作及成效分析。</p>
+          <ul class="member-features">
+            <li>完整活動策劃書</li>
+            <li>藝術家遴選與合約</li>
+            <li>現場或數位內容執行</li>
+            <li>成效報告與建議</li>
+          </ul>
+        </div>
+        <div class="tier reveal reveal-delay-2" style="padding:2rem">
+          <div class="tier-name">年度藝術策略顧問</div>
+          <div class="tier-price" style="font-size:1.8rem;margin:1rem 0">依專案議定</div>
+          <p class="tier-desc" style="margin-bottom:1.5rem">成為品牌長期的藝術策略夥伴，建立可複利增長的文化影響力體系。</p>
+          <ul class="member-features">
+            <li>季度策略規劃會議</li>
+            <li>長期藝術家夥伴網絡</li>
+            <li>CSR 報告藝術章節</li>
+            <li>品牌藝術資產庫建立</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-eyebrow">常見問題</div>
+      <h2 class="section-title">企業最想知道的<em>答案</em></h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            如何找到最適合我們品牌的藝術家？
+            <span class="faq-toggle">+</span>
+          </div>
+          <div class="faq-a"><p>我們會先透過深度品牌訪談，了解你們的品牌調性、目標受眾與期望傳達的價值觀，再從我們 150+ 位合作藝術家資料庫中，精選 3-5 位最匹配的候選人，提供完整的媒合報告與建議理由。</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            一個專案通常需要多長時間？
+            <span class="faq-toggle">+</span>
+          </div>
+          <div class="faq-a"><p>依據專案規模，藝文探索方案約需 2-3 週，品牌藝術活化方案通常需要 8-12 週，年度策略合約則是持續性的夥伴關係。我們在初次諮詢時會給出詳細的時程規劃。</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            藝術合作的成效如何量化？
+            <span class="faq-toggle">+</span>
+          </div>
+          <div class="faq-a"><p>我們會在專案開始前共同設定 KPI，包含媒體觸及率、品牌好感度調查、社群互動數據等，並在專案結束後提供完整的成效報告，同時也能協助納入 CSR 報告中的藝術影響力章節。</p></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            我們沒有藝術背景，可以直接合作嗎？
+            <span class="faq-toggle">+</span>
+          </div>
+          <div class="faq-a"><p>完全可以，而且這是我們最常見的客戶狀況。I Creation 的存在，正是為了讓沒有藝術背景的企業，也能精準、有策略地運用藝術的力量。我們會全程翻譯兩種語言，讓你的團隊能夠充分理解並主導整個過程。</p></div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:2rem">
+        <button class="btn-primary" onclick="showPage('contact')"><span>預約免費 30 分鐘探索通話 →</span></button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ==================== PAGE: SERVICE ARTIST ==================== -->
+<div class="page" id="page-service-artist">
+  <section class="sub-service-hero">
+    <div class="section-inner">
+      <div class="section-eyebrow">02 / ARTIST SERVICE</div>
+      <h1 class="section-title">你有才華。<br>我們幫你讓<em>世界看見你</em>。</h1>
+      <p class="section-subtitle">學校教創作，市場獎勵懂得溝通的人。我們兩者都教。</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-eyebrow">效益對照</div>
+      <h2 class="section-title">獨自摸索 vs. <em>與我們同行</em></h2>
+      <table class="comparison-table reveal">
+        <thead>
+          <tr>
+            <th>面向</th>
+            <th>獨自摸索</th>
+            <th>與 I Creation 同行</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>補助申請</td>
+            <td class="col-bad">靠口耳相傳、資訊不完整</td>
+            <td class="col-good">定期整理補助資訊，社群共享申請策略</td>
+          </tr>
+          <tr>
+            <td>企業合作</td>
+            <td class="col-bad">不知道如何接觸企業，或無法說服對方</td>
+            <td class="col-good">藝術家名錄曝光，企業媒合主動推薦</td>
+          </tr>
+          <tr>
+            <td>定價策略</td>
+            <td class="col-bad">靠感覺定價，常常低估自己的價值</td>
+            <td class="col-good">工作坊傳授定價框架，不再賤賣才華</td>
+          </tr>
+          <tr>
+            <td>職涯規劃</td>
+            <td class="col-bad">走一步算一步，沒有清晰的方向</td>
+            <td class="col-good">一對一諮詢幫你制定五年職涯路線圖</td>
+          </tr>
+          <tr>
+            <td>社群支持</td>
+            <td class="col-bad">孤立無援，難以分享困境</td>
+            <td class="col-good">150+ 位藝術工作者的真實社群</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--navy-mid)">
+    <div class="section-inner">
+      <div class="section-eyebrow">會員方案</div>
+      <h2 class="section-title">找到最適合你<em>現在的方案</em></h2>
+      <div class="membership-grid">
+        <div class="member-tier reveal">
+          <div class="member-tier-name">觀察者</div>
+          <div class="member-tier-price">免費 <small>/ 永久</small></div>
+          <ul class="member-features">
+            <li>接收公開知識內容</li>
+            <li>每月電子報訂閱</li>
+            <li>公開工作坊資訊</li>
+          </ul>
+          <button class="btn-outline" style="width:100%;padding:12px" onclick="handleJoin('觀察者')">立即加入</button>
+        </div>
+        <div class="member-tier featured reveal reveal-delay-1">
+          <div class="member-tier-name">實踐者</div>
+          <div class="member-tier-price">NT$ 980 <small>/ 月</small></div>
+          <ul class="member-features">
+            <li>觀察者所有權益</li>
+            <li>專屬策略週報</li>
+            <li>私密社群 Discord</li>
+            <li>每月直播問答</li>
+            <li>工作坊 8 折優惠</li>
+          </ul>
+          <button class="btn-primary" style="width:100%" onclick="handleJoin('實踐者')"><span>選擇此方案</span></button>
+        </div>
+        <div class="member-tier reveal reveal-delay-2">
+          <div class="member-tier-name">加速者</div>
+          <div class="member-tier-price">NT$ 3,500 <small>/ 季</small></div>
+          <ul class="member-features">
+            <li>實踐者所有權益</li>
+            <li>每季一對一諮詢</li>
+            <li>藝術家名錄登錄</li>
+            <li>企業媒合優先推薦</li>
+            <li>獨家出版機會</li>
+          </ul>
+          <button class="btn-outline" style="width:100%;padding:12px" onclick="handleJoin('加速者')">選擇此方案</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner" style="text-align:center">
+      <div class="section-eyebrow" style="justify-content:center">現在就開始</div>
+      <h2 class="section-title">不確定從哪裡開始？</h2>
+      <p style="color:var(--silver);max-width:500px;margin:0 auto 2rem;line-height:1.8">填寫藝術家表單，讓我們了解你目前的狀況，我們會在 48 小時內給你個人化的建議。</p>
+      <button class="btn-primary" onclick="showPage('contact')"><span>填寫藝術家表單 →</span></button>
+    </div>
+  </section>
+</div>
+
+<!-- ==================== PAGE: SERVICE PUBLISH ==================== -->
+<div class="page" id="page-service-publish">
+  <section class="sub-service-hero">
+    <div class="section-inner">
+      <div class="section-eyebrow">03 / PUBLISHING SERVICE</div>
+      <h1 class="section-title">每位藝術家心中，<br>都有<em>一本書</em>。</h1>
+      <p class="section-subtitle">出版是留下遺產的方式，也是建立權威的最強工具。我們陪你從想法走到書架。</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-eyebrow">為什麼出版</div>
+      <h2 class="section-title">一本書能帶給你的<em>三件事</em></h2>
+      <div class="services-grid">
+        <div class="service-card reveal" style="grid-column:span 1">
+          <div class="service-icon">🏛️</div>
+          <h3 class="service-name">留下遺產</h3>
+          <p class="service-desc">書籍是你的創作理念、人生智慧與藝術哲學最完整的載體，讓你的思想跨越時間存在。</p>
+        </div>
+        <div class="service-card reveal reveal-delay-1">
+          <div class="service-icon">👑</div>
+          <h3 class="service-name">建立權威</h3>
+          <p class="service-desc">一本書讓你從「藝術工作者」躍升為「領域專家」，帶來更多演講邀約、媒體曝光與高端合作機會。</p>
+        </div>
+        <div class="service-card reveal reveal-delay-2" style="grid-column:span 2">
+          <div class="service-icon">💡</div>
+          <h3 class="service-name">創造被動收入</h3>
+          <p class="service-desc">書籍持續銷售，版稅持續入帳。一次性的創作投入，帶來長期的收益回報，是藝術工作者最值得建立的被動收入來源之一。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--navy-mid)">
+    <div class="section-inner">
+      <div class="section-eyebrow">出版流程</div>
+      <h2 class="section-title">從想法到書架的<em>完整路徑</em></h2>
+      <div class="timeline reveal">
+        <div class="timeline-item">
+          <div class="timeline-phase">PHASE 1 · 1-2 週</div>
+          <div class="timeline-title">探索會議</div>
+          <div class="timeline-desc">深度了解你的寫作動機、目標讀者與希望傳達的核心訊息，確認出版方向。</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">PHASE 2 · 2-4 週</div>
+          <div class="timeline-title">概念規劃與企劃書</div>
+          <div class="timeline-desc">章節架構規劃、書名發想、市場定位，並協助撰寫完整的出版企劃書。</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">PHASE 3 · 4-12 週</div>
+          <div class="timeline-title">寫作支援</div>
+          <div class="timeline-desc">定期寫作督促、內容審閱反饋、文字潤稿與結構調整，讓寫作過程有人陪伴。</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">PHASE 4 · 3-4 週</div>
+          <div class="timeline-title">設計與排版</div>
+          <div class="timeline-desc">封面設計、內頁排版、圖片處理，以及 ISBN 申請與印製準備。</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-phase">PHASE 5 · 持續進行</div>
+          <div class="timeline-title">出版發行與宣傳</div>
+          <div class="timeline-desc">書店上架、電子書平台上架、首發活動策劃與媒體宣傳計劃執行。</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:2rem">
+        <button class="btn-primary" onclick="showPage('contact')"><span>預約出版諮詢 →</span></button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ==================== PAGE: SERVICE AI ==================== -->
+<div class="page" id="page-service-ai">
+  <section class="sub-service-hero">
+    <div class="section-inner">
+      <div class="section-eyebrow">04 / AI + ART SERVICE</div>
+      <h1 class="section-title">人類創意。<br><em>AI 放大</em>。</h1>
+      <p class="section-subtitle">運用生成式 AI 為藝術家與品牌打造視覺內容。AI 是工具，重點永遠是你想說的故事。</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-eyebrow">三大應用場景</div>
+      <h2 class="section-title">AI 如何<em>服務你的創意</em></h2>
+      <div class="ai-scenarios">
+        <div class="ai-scenario reveal">
+          <div class="ai-scenario-icon">🏢</div>
+          <h4>企業品牌視覺</h4>
+          <ul>
+            <li>品牌視覺語言開發</li>
+            <li>AI 輔助形象照系列</li>
+            <li>活動視覺素材包</li>
+            <li>社群內容視覺模板</li>
+            <li>品牌故事影像概念</li>
+          </ul>
+        </div>
+        <div class="ai-scenario reveal reveal-delay-1">
+          <div class="ai-scenario-icon">🎨</div>
+          <h4>藝術家個人品牌套件</h4>
+          <ul>
+            <li>個人品牌視覺整合</li>
+            <li>作品集視覺化呈現</li>
+            <li>社群封面與貼文素材</li>
+            <li>個人形象照與宣傳物</li>
+            <li>藝術家品牌手冊</li>
+          </ul>
+        </div>
+        <div class="ai-scenario reveal reveal-delay-2">
+          <div class="ai-scenario-icon">📖</div>
+          <h4>出版品視覺概念</h4>
+          <ul>
+            <li>書籍封面概念設計</li>
+            <li>內頁插圖與視覺</li>
+            <li>出版行銷素材全套</li>
+            <li>作者形象視覺系統</li>
+            <li>書展展位視覺設計</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--navy-mid)">
+    <div class="section-inner">
+      <div style="max-width:700px;margin:0 auto;text-align:center">
+        <div class="section-eyebrow" style="justify-content:center">核心哲學</div>
+        <h2 class="section-title">AI 是相機，<br>故事才是<em>靈魂</em></h2>
+        <div class="tagline-flip" style="text-align:left">
+          <p>攝影術發明的時候，人們說畫家會消失。結果攝影成了一門新的藝術，也讓繪畫更自由。</p>
+        </div>
+        <div class="tagline-flip" style="text-align:left">
+          <p>AI 圖像工具的出現，不是藝術家的終結，而是新工具語言的開始。我們的任務，是幫你學會這門語言，讓它服務你的創意，而不是取代你的靈魂。</p>
+        </div>
+        <div style="margin-top:2rem">
+          <button class="btn-primary" onclick="showPage('contact')"><span>開始你的 AI 視覺專案 →</span></button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ==================== PAGE: PORTFOLIO ==================== -->
+<div class="page" id="page-portfolio">
+  <section class="sub-service-hero">
+    <div class="section-inner">
+      <div class="section-eyebrow">案例展示</div>
+      <h1 class="section-title">創造文化的<em>作品</em></h1>
+      <p class="section-subtitle">每一個案例，都是一次藝術與商業的精準對話。</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="portfolio-filters">
+        <button class="filter-btn active" onclick="filterPortfolio(this,'all')">全部</button>
+        <button class="filter-btn" onclick="filterPortfolio(this,'enterprise')">企業藝術策略</button>
+        <button class="filter-btn" onclick="filterPortfolio(this,'artist')">藝術家故事</button>
+        <button class="filter-btn" onclick="filterPortfolio(this,'publish')">出版作品</button>
+        <button class="filter-btn" onclick="filterPortfolio(this,'ai')">AI 內容</button>
+      </div>
+      <div class="portfolio-grid">
+        <div class="portfolio-card reveal" data-cat="enterprise">
+          <div class="portfolio-card-visual">🏙️</div>
+          <div class="portfolio-card-body">
+            <div class="portfolio-tag">⬡ 零售 × 企業策略</div>
+            <h3>城市美學節品牌藝術策略</h3>
+            <p>在地零售品牌的年度品牌藝術計劃，串聯 12 位跨域藝術家，從空間裝置到數位內容全面規劃。</p>
+            <div class="portfolio-metrics">
+              <div class="portfolio-metric"><span class="portfolio-metric-v">280K+</span><span class="portfolio-metric-l">觸及人次</span></div>
+              <div class="portfolio-metric"><span class="portfolio-metric-v">12</span><span class="portfolio-metric-l">合作藝術家</span></div>
+              <div class="portfolio-metric"><span class="portfolio-metric-v">340%</span><span class="portfolio-metric-l">聲量成長</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="portfolio-card reveal reveal-delay-1" data-cat="artist">
+          <div class="portfolio-card-visual">🎭</div>
+          <div class="portfolio-card-body">
+            <div class="portfolio-tag">⬡ 視覺藝術家職涯</div>
+            <h3>從街頭塗鴉到品牌合作的轉型之路</h3>
+            <p>協助一位自學出身的插畫藝術家，在 6 個月內建立品牌識別、定價體系與企業客戶群。</p>
+            <div class="portfolio-metrics">
+              <div class="portfolio-metric"><span class="portfolio-metric-v">3×</span><span class="portfolio-metric-l">單價提升</span></div>
+              <div class="portfolio-metric"><span class="portfolio-metric-v">5</span><span class="portfolio-metric-l">企業新客戶</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="portfolio-card reveal reveal-delay-2" data-cat="publish">
+          <div class="portfolio-card-visual">📚</div>
+          <div class="portfolio-card-body">
+            <div class="portfolio-tag">⬡ 出版 × 策展人</div>
+            <h3>《空間敘事學》—— 一位策展人的出版首作</h3>
+            <p>協助資深策展人完成第一本著作，從概念整理到出版發行，首刷三個月內售罄。</p>
+            <div class="portfolio-metrics">
+              <div class="portfolio-metric"><span class="portfolio-metric-v">首刷</span><span class="portfolio-metric-l">3月售罄</span></div>
+              <div class="portfolio-metric"><span class="portfolio-metric-v">12+</span><span class="portfolio-metric-l">演講邀約</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="portfolio-card reveal reveal-delay-3" data-cat="ai">
+          <div class="portfolio-card-visual">⚡</div>
+          <div class="portfolio-card-body">
+            <div class="portfolio-tag">⬡ AI × 金融品牌</div>
+            <h3>金融集團年報 AI 視覺再造計劃</h3>
+            <p>運用生成式 AI 為傳統金融集團的年報設計全新的視覺語言，將數據敘事轉化為藝術體驗。</p>
+            <div class="portfolio-metrics">
+              <div class="portfolio-metric"><span class="portfolio-metric-v">60%</span><span class="portfolio-metric-l">製作時間縮短</span></div>
+              <div class="portfolio-metric"><span class="portfolio-metric-v">獎</span><span class="portfolio-metric-l">設計年鑑入選</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ==================== PAGE: CONTENT ==================== -->
+<div class="page" id="page-content">
+  <section class="sub-service-hero">
+    <div class="section-inner">
+      <div class="section-eyebrow">I Creation 創作室</div>
+      <h1 class="section-title">關於藝術、策略、<br>職涯與文化的<em>深度思考</em></h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-eyebrow">深度文章</div>
+      <h2 class="section-title">長讀，值得你的<em>時間</em></h2>
+      <div class="content-list">
+        <div class="content-row reveal">
+          <div class="content-row-type" style="background:rgba(32,96,168,0.15)">📝</div>
+          <div class="content-row-body">
+            <div class="content-row-label">品牌策略</div>
+            <h3>當企業開始收藏藝術：從投資到策略資產的轉變</h3>
+            <p>越來越多企業將藝術收藏從純粹的美學考量，轉型為有明確策略意圖的品牌建設行為。本文深入分析這個趨勢背後的商業邏輯，以及企業應該如何系統性地建立藝術資產組合。</p>
+          </div>
+          <div class="content-row-meta"><span class="read-time">8 分鐘</span><button class="btn-outline" style="padding:6px 14px;font-size:0.78rem">閱讀</button></div>
+        </div>
+        <div class="content-row reveal">
+          <div class="content-row-type" style="background:rgba(32,96,168,0.15)">📝</div>
+          <div class="content-row-body">
+            <div class="content-row-label">藝術家職涯</div>
+            <h3>定價的藝術：為什麼大多數創作者都低估了自己的價值</h3>
+            <p>定價不只是數字，它是你對自身價值的認知宣言。本文從心理學與市場策略兩個角度，解析藝術工作者在定價時最常犯的三個錯誤，以及如何系統性地重建定價邏輯。</p>
+          </div>
+          <div class="content-row-meta"><span class="read-time">12 分鐘</span><button class="btn-outline" style="padding:6px 14px;font-size:0.78rem">閱讀</button></div>
+        </div>
+        <div class="content-row reveal">
+          <div class="content-row-type" style="background:rgba(32,96,168,0.15)">📝</div>
+          <div class="content-row-body">
+            <div class="content-row-label">文化策略</div>
+            <h3>CSR 已死，品牌文化長存：企業藝術投資的新框架</h3>
+            <p>當 CSR 成為公關標配，企業如何透過更深度的藝術策略，建立真正差異化的品牌文化？本文提出一個全新的企業藝術投資思考框架。</p>
+          </div>
+          <div class="content-row-meta"><span class="read-time">10 分鐘</span><button class="btn-outline" style="padding:6px 14px;font-size:0.78rem">閱讀</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--navy-mid)">
+    <div class="section-inner">
+      <div class="section-eyebrow">Podcast 節目</div>
+      <h2 class="section-title">邊走邊聽，<em>邊學邊長</em></h2>
+      <div class="content-list">
+        <div class="content-row reveal">
+          <div class="content-row-type" style="background:rgba(196,147,58,0.15)">🎙️</div>
+          <div class="content-row-body">
+            <div class="content-row-label">職涯發展</div>
+            <h3>EP.23 藝術家如何定價自己的創作？商業思維的切入點</h3>
+            <p>本集邀請三位成功轉型的藝術工作者，分享如何重新思考自身的市場價值，以及定價背後的心理建設。</p>
+          </div>
+          <div class="content-row-meta"><span class="read-time">42 分鐘</span><button class="btn-outline" style="padding:6px 14px;font-size:0.78rem">收聽</button></div>
+        </div>
+        <div class="content-row reveal">
+          <div class="content-row-type" style="background:rgba(196,147,58,0.15)">🎙️</div>
+          <div class="content-row-body">
+            <div class="content-row-label">企業觀點</div>
+            <h3>EP.22 與品牌總監對談：企業為什麼需要一位「藝術策略長」</h3>
+            <p>對話一位主導品牌藝術策略超過十年的行銷主管，深入探討企業內部如何推動藝術文化的系統性建立。</p>
+          </div>
+          <div class="content-row-meta"><span class="read-time">55 分鐘</span><button class="btn-outline" style="padding:6px 14px;font-size:0.78rem">收聽</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-eyebrow">YouTube 影音</div>
+      <h2 class="section-title">看見，才能<em>理解</em></h2>
+      <div class="content-list">
+        <div class="content-row reveal">
+          <div class="content-row-type" style="background:rgba(224,60,90,0.15)">▶️</div>
+          <div class="content-row-body">
+            <div class="content-row-label">AI 藝術</div>
+            <h3>AI 時代，藝術家不會消失：生成式 AI 的正確使用姿態</h3>
+            <p>許多藝術家恐懼 AI 的到來，但那些把 AI 視為工具的創作者，正在拓展前所未有的創作邊界。本影片分享五個 AI 輔助創作的實際工作流程。</p>
+          </div>
+          <div class="content-row-meta"><span class="read-time">18 分鐘</span><button class="btn-outline" style="padding:6px 14px;font-size:0.78rem">觀看</button></div>
+        </div>
+        <div class="content-row reveal">
+          <div class="content-row-type" style="background:rgba(224,60,90,0.15)">▶️</div>
+          <div class="content-row-body">
+            <div class="content-row-label">出版知識</div>
+            <h3>你的第一本書：從想法到出版的完整路線圖</h3>
+            <p>把出版這件事拆解成可執行的具體步驟。不管你是藝術家、講師還是顧問，這支影片告訴你，出版一本書沒有你想的那麼難。</p>
+          </div>
+          <div class="content-row-meta"><span class="read-time">25 分鐘</span><button class="btn-outline" style="padding:6px 14px;font-size:0.78rem">觀看</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ==================== PAGE: CONTACT ==================== -->
+<div class="page" id="page-contact">
+  <section class="sub-service-hero">
+    <div class="section-inner">
+      <div class="section-eyebrow">聯繫我們</div>
+      <h1 class="section-title">讓我們開始<br>一段<em>對話</em>。</h1>
+      <p class="section-subtitle">無壓力的諮詢入口。不管你是企業決策者還是藝術工作者，都歡迎先來聊聊。</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="contact-grid">
+        <div class="contact-card reveal">
+          <div class="contact-card-icon">🏢</div>
+          <h3>企業客戶</h3>
+          <p>預約一場 30 分鐘的探索通話。沒有簡報、沒有承諾，只是一段對話，幫我們了解你的需求，也讓你了解我們能做什麼。</p>
+          <button class="btn-primary" onclick="showToast('感謝您的預約，我們將在 24 小時內與您確認時間！')"><span>預約 30 分鐘探索通話 →</span></button>
+          <div class="contact-info">
+            <div class="contact-info-item">
+              <span>📧</span>
+              <span>enterprise@icreation.tw</span>
+            </div>
+            <div class="contact-info-item">
+              <span>🕐</span>
+              <span>回覆時間：工作日 24 小時內</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-card reveal reveal-delay-1">
+          <div class="contact-card-icon">🎨</div>
+          <h3>藝術工作者</h3>
+          <p>填寫下方表單，讓我們了解你目前的創作狀態與需求，我們的顧問將在 48 小時內回覆，並提供最適合你的下一步建議。</p>
+          <div class="contact-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>姓名</label>
+                <input type="text" class="form-input" placeholder="你的名字">
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" class="form-input" placeholder="your@email.com">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>藝術領域</label>
+              <select class="form-select">
+                <option value="">請選擇你的創作領域</option>
+                <option>視覺藝術 / 繪畫</option>
+                <option>插畫 / 設計</option>
+                <option>攝影</option>
+                <option>雕塑 / 裝置</option>
+                <option>音樂 / 聲音藝術</option>
+                <option>文學 / 寫作</option>
+                <option>跨域創作</option>
+                <option>其他</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>目前創作狀態</label>
+              <textarea class="form-textarea" placeholder="簡單描述你目前的創作狀況、遇到的困境，或是希望達成的目標..."></textarea>
+            </div>
+            <button class="btn-primary" style="width:100%" onclick="handleArtistForm()"><span>送出表單 →</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:3rem;background:var(--glass);border:1px solid var(--glass-border);border-radius:4px;padding:2rem;text-align:center" class="reveal">
+        <div style="font-family:var(--font-tech);font-size:0.7rem;letter-spacing:0.2em;color:var(--blue-bright);margin-bottom:1rem">後續流程</div>
+        <p style="color:var(--silver);line-height:1.8">送出訊息後，我們的團隊將在 <strong style="color:var(--white)">48 小時內</strong> 回覆，並提供針對你的狀況量身設計的下一步建議。我們不追銷、不施壓——只是一段真誠的對話。</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+// ============================================================
+// PAGE NAVIGATION
+// ============================================================
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('page-' + pageId);
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    initReveal();
+    if (pageId === 'home') initCounters();
+  }
+}
+
+// ============================================================
+// NAV SCROLL
+// ============================================================
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('main-nav');
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ============================================================
+// MOBILE MENU
+// ============================================================
+function toggleMenu() {
+  document.getElementById('mobile-menu').classList.toggle('open');
+}
+
+// ============================================================
+// PARTICLE CANVAS
+// ============================================================
+(function() {
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  let w, h;
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+
+  function createParticle() {
+    return {
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      r: Math.random() * 1.5 + 0.3,
+      a: Math.random() * 0.5 + 0.1
+    };
+  }
+
+  function init() {
+    resize();
+    particles = Array.from({ length: 100 }, createParticle);
+    window.addEventListener('resize', resize);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0) p.x = w;
+      if (p.x > w) p.x = 0;
+      if (p.y < 0) p.y = h;
+      if (p.y > h) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(48, 120, 200, ${p.a})`;
+      ctx.fill();
+    });
+
+    // Draw connections
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 120) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(32, 90, 160, ${0.15 * (1 - dist / 120)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+
+  init();
+  draw();
+})();
+
+// ============================================================
+// SCROLL REVEAL
+// ============================================================
+function initReveal() {
+  setTimeout(() => {
+    const reveals = document.querySelectorAll('.page.active .reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+  }, 100);
+}
+
+// ============================================================
+// COUNTER ANIMATION
+// ============================================================
+function initCounters() {
+  const counters = document.querySelectorAll('.stat-number[data-count]');
+  counters.forEach(counter => {
+    const target = parseInt(counter.getAttribute('data-count'));
+    const suffix = counter.nextElementSibling?.textContent.includes('年') || target <= 10 ? '' : '+';
+    let current = 0;
+    const step = Math.ceil(target / 40);
+    const timer = setInterval(() => {
+      current = Math.min(current + step, target);
+      counter.textContent = current + (target > 5 ? '+' : '');
+      if (current >= target) clearInterval(timer);
+    }, 40);
+  });
+}
+
+// ============================================================
+// ACCORDION
+// ============================================================
+function toggleAccordion(header) {
+  const body = header.nextElementSibling;
+  const toggle = header.querySelector('.faq-toggle');
+  const isOpen = body.classList.contains('open');
+  
+  // Close all
+  document.querySelectorAll('.service-detail-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.service-detail-header .faq-toggle').forEach(t => t.textContent = '+');
+  
+  if (!isOpen) {
+    body.classList.add('open');
+    toggle.textContent = '−';
+  }
+}
+
+// ============================================================
+// FAQ
+// ============================================================
+function toggleFaq(q) {
+  const item = q.parentElement;
+  item.classList.toggle('open');
+}
+
+// ============================================================
+// PORTFOLIO FILTER
+// ============================================================
+function filterPortfolio(btn, cat) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.portfolio-card').forEach(card => {
+    card.style.display = (cat === 'all' || card.dataset.cat === cat) ? 'block' : 'none';
+  });
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function handleSubscribe() {
+  showToast('✓ 訂閱成功！感謝加入我們的文化策略社群。');
+}
+
+function handleJoin(tier) {
+  showToast(`✓ 已選擇「${tier}」方案，正在跳轉至付款頁面...`);
+}
+
+function handleArtistForm() {
+  showToast('✓ 表單已送出！我們將在 48 小時內回覆您。');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  initReveal();
+  initCounters();
+  
+  // Trigger reveal for initially visible elements
+  setTimeout(() => {
+    document.querySelectorAll('.reveal').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight) {
+        el.classList.add('visible');
+      }
+    });
+  }, 200);
+});
+</script>
+</body>
+</html>
